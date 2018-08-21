@@ -20,10 +20,10 @@ namespace Pericles.VoterTerminal
         IVoteSerializer voteSerializer;
         string password;
 
-        public VoterTerminal(VoterDatabaseFacade voterDb, IVoteSerializer voteSerializer) {
+        public VoterTerminal(VoterDatabaseFacade voterDb) {
             this.voterDb = voterDb;
             this.candidateArr = new string[] { "Donald Trump", "Arnold Schawarzeneggar", "Oprah Winfrey", "Patrick Yukman"};
-            this.voteSerializer = voteSerializer;
+            this.voteSerializer = new VoteSerializer();
         }
 
         public bool login(string password, out EncryptedKeyPair crypticKeyPair)
@@ -70,6 +70,7 @@ namespace Pericles.VoterTerminal
                     Console.WriteLine("You've exhausted your tries. Bye Bye");
                     return;
                 }
+
                 FirstPastThePostVote irVote = new FirstPastThePostVote(this.candidateArr[choice - 1]);
                 var jsonVote = this.voteSerializer.Serialize(irVote);
                 var signature = SignatureProvider.Sign(this.password, this.keyPair, jsonVote.GetBytes());
@@ -124,7 +125,7 @@ namespace Pericles.VoterTerminal
             }
         }
 
-        string getResult() { }
+        public string getResult() { return ""; }
 
     }
 }
