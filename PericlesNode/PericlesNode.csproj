@@ -105,6 +105,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\UnixTimestampGenerator.cs" />
+    <Compile Include="VoterTerminal\VoterTerminal.cs" />
     <Compile Include="VoterTerminal\IVoterTerminal.cs" />
     <Compile Include="Votes\GenesisVote.cs" />
     <Compile Include="Votes\ProtoVoteFactory.cs" />
@@ -121,6 +122,10 @@
     <ProjectReference Include="..\CryptoUtils\CryptoUtils.csproj">
       <Project>{e115a2fa-466a-457d-a05f-3a01f211bfc1}</Project>
       <Name>CryptoUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ElectionModels\ElectionModels.csproj">
+      <Project>{6ad2b7b2-66c8-47b1-bc2c-8c613354f089}</Project>
+      <Name>ElectionModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\Protocol\Protocol.csproj">
       <Project>{724dfc8c-4b57-4c3f-811c-0463be2a2829}</Project>
