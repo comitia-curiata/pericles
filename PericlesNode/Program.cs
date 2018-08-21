@@ -63,7 +63,7 @@ namespace Pericles
             var blockFactory = new BlockFactory(merkleTreeFactory, minerId);
             var protoBlockFactory = new ProtoBlockFactory(protoVoteFactory);
             var blockForwarder = new BlockForwarder(nodeClientStore, protoBlockFactory);
-            var voteValidator = new VoteValidator(blockchain, voterDb);
+            var voteValidator = new VoteValidator(blockchain, voterDb, nodeConfig.ElectionEndTime);
             var blockValidator = new BlockValidator(blockFactory, voteValidator);
             var blockchainAdder = new BlockchainAdder(blockchain, voteMemoryPool, blockForwarder, console);
 
@@ -86,12 +86,13 @@ namespace Pericles
                 nodeConfig.ElectionEndTime,
                 voteMemoryPool,
                 blockchain);
-            var ballotInterface = new VoterTerminal.VoterTerminal(
+            var voterTerminal = new VoterTerminal.VoterTerminal(
                 voterDb,
                 nodeConfig.Candidates.ToArray(),
                 voteSerializer,
                 voteMemoryPool,
                 electionResultProvider);
+            var votingBooth = new VoterTerminal.VoterBooth(voterTerminal, nodeConfig.ElectionType);
 
             // startup
             var nodeServer = nodeServerFactory.Build(
@@ -132,8 +133,7 @@ namespace Pericles
             }
             else
             {
-                ballotInterface.login(password, out var dummyEncryptedKeyPair);
-                ballotInterface.ballotPrompt(nodeConfig.ElectionType);
+                votingBooth.LaunchBooth();
             }
         }
     }

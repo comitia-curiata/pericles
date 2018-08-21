@@ -9,16 +9,19 @@ namespace Pericles.Votes
     {
         private readonly VoterDatabaseFacade voterDb;
         private readonly Blockchain blockchain;
+        private readonly DateTime electionEndTime;
 
-        public VoteValidator(Blockchain blockchain, VoterDatabaseFacade voterDb)
+        public VoteValidator(Blockchain blockchain, VoterDatabaseFacade voterDb, DateTime electionEndTime)
         {
             this.blockchain = blockchain;
             this.voterDb = voterDb;
+            this.electionEndTime = electionEndTime;
         }
 
         public bool IsValid(Vote vote)
         {
-            return this.IsValidVoter(vote) && this.IsFirstVoteFromVoter(vote) && IsSignatureValid(vote);
+            var isPastTimeLimit = DateTime.Now > this.electionEndTime;
+            return isPastTimeLimit && this.IsValidVoter(vote) && this.IsFirstVoteFromVoter(vote) && IsSignatureValid(vote);
         }
 
         private bool IsValidVoter(Vote vote)
