@@ -1,5 +1,6 @@
 ﻿using System;
 using Pericles.Blocks;
+using Pericles.Configuration;
 using Pericles.Crypto;
 using Pericles.Merkle;
 using Pericles.Mining;
@@ -17,11 +18,12 @@ namespace Pericles
 
         public static void Main(string[] args)
         {
-            var password = args[0];
-            var dbFilepath = args[1];
-            var port = int.Parse(args[2]);
+            var configFilepath = args[0];
+            var password = args[1];
 
-            var voterDb = new VoterDatabaseFacade(dbFilepath);
+            var nodeConfig = ConfigDeserializer.Deserialize<NodeConfig>(configFilepath);
+
+            var voterDb = new VoterDatabaseFacade(nodeConfig.VoterDbFilepath);
             var foundMiner = voterDb.TryGetVoterEncryptedKeyPair(password, out var encryptedKeyPair);
             if (!foundMiner)
             {
@@ -35,7 +37,7 @@ namespace Pericles
             var registrarClientFactory = new RegistrarClientFactory();
             var registrarClient = registrarClientFactory.Build(Localhost, RegistrarPort);
             var registrationRequestFactory = new RegistrationRequestFactory();
-            var myConnectionInfo = new NodeConnectionInfo(Localhost, port);
+            var myConnectionInfo = new NodeConnectionInfo(Localhost, nodeConfig.Port);
             var knownNodeStore = new KnownNodeStore();
             var nodeClientFactory = new NodeClientFactory();
             var handshakeRequestFactory = new HandshakeRequestFactory(blockchain);

@@ -1,0 +1,12 @@
+﻿{
+    "electionType": "FirstPastThePost",
+    "candidates": [
+        "Donald Trump",
+        "Hillary Clinton",
+        "Gary Johnson",
+        "Jill Stein"
+    ],
+    "voterDbFilepath": "../../../VoterDatabase/pericles_voter_db.sqlite",
+    "isMiningNode": true,
+    "port": 58883
+}

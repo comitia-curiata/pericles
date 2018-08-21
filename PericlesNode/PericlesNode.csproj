@@ -47,6 +47,9 @@
     <Reference Include="Grpc.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d754f35622e28bad, processorArchitecture=MSIL">
       <HintPath>..\packages\Grpc.Core.1.8.0\lib\net45\Grpc.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -81,6 +84,12 @@
     <Compile Include="Blocks\GenesisBlock.cs" />
     <Compile Include="Blocks\ProtoBlockFactory.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Configuration\ConfigDeserializer.cs" />
+    <Compile Include="Configuration\Console\ConsoleFactory.cs" />
+    <Compile Include="Configuration\Console\DoNothingConsole.cs" />
+    <Compile Include="Configuration\Console\Interfaces\IConsole.cs" />
+    <Compile Include="Configuration\Console\MinerConsole.cs" />
+    <Compile Include="Configuration\NodeConfig.cs" />
     <Compile Include="Hashing\Sha256DoubleHasher.cs" />
     <Compile Include="Hashing\Hash.cs" />
     <Compile Include="Merkle\MerkleNode.cs" />
@@ -115,12 +124,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="terminal.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="miner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CryptoUtils\CryptoUtils.csproj">
       <Project>{e115a2fa-466a-457d-a05f-3a01f211bfc1}</Project>
       <Name>CryptoUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ElectionModels\ElectionModels.csproj">
+      <Project>{6AD2B7B2-66C8-47B1-BC2C-8C613354F089}</Project>
+      <Name>ElectionModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\Protocol\Protocol.csproj">
       <Project>{724dfc8c-4b57-4c3f-811c-0463be2a2829}</Project>
