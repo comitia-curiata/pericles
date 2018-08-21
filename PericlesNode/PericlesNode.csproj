@@ -133,6 +133,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonUtils\CommonUtils.csproj">
+      <Project>{52573362-1de5-4570-8b67-46fda3a3e936}</Project>
+      <Name>CommonUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CryptoUtils\CryptoUtils.csproj">
       <Project>{e115a2fa-466a-457d-a05f-3a01f211bfc1}</Project>
       <Name>CryptoUtils</Name>

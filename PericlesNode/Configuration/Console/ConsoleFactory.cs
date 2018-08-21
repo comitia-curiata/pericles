@@ -2,9 +2,9 @@
 
 namespace Pericles.Configuration.Console
 {
-    public class ConsoleFactory
+    public static class ConsoleFactory
     {
-        public IConsole Build(bool isMiningConsole)
+        public static IConsole Build(bool isMiningConsole)
         {
             if (isMiningConsole)
             {

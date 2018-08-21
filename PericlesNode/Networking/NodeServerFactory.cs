@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using Pericles.Blocks;
+using Pericles.Configuration.Console.Interfaces;
 using Pericles.Mining;
 using Pericles.Protocol;
 using Pericles.Votes;
@@ -18,7 +19,8 @@ namespace Pericles.Networking
             Miner miner,
             VoteValidator voteValidator,
             BlockValidator blockValidator,
-            BlockchainAdder blockchainAdder)
+            BlockchainAdder blockchainAdder,
+            IConsole console)
         {
             var handshakeService = new NodeService(
                 knownNodeStore,
@@ -29,7 +31,8 @@ namespace Pericles.Networking
                 miner,
                 voteValidator,
                 blockValidator,
-                blockchainAdder);
+                blockchainAdder,
+                console);
             var server = new Server
             {
                 Services = { Node.BindService(handshakeService) },

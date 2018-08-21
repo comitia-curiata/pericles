@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Pericles.Configuration.Console.Interfaces;
 using Pericles.Hashing;
 
 namespace Pericles.Votes
@@ -9,12 +10,14 @@ namespace Pericles.Votes
     {
         private readonly IOrderedDictionary votePool;
         private readonly VoteForwarder voteForwarder;
+        private readonly IConsole console;
         private readonly object locker;
 
-        public VoteMemoryPool(VoteForwarder voteForwarder)
+        public VoteMemoryPool(VoteForwarder voteForwarder, IConsole console)
         {
             this.votePool = new OrderedDictionary();
             this.voteForwarder = voteForwarder;
+            this.console = console;
             this.locker = new object();
         }
 
@@ -46,7 +49,7 @@ namespace Pericles.Votes
                     return;
                 }
 
-                Console.WriteLine($"ADDING TXN: {vote.Hash}");
+                this.console.WriteLine($"ADDING VOTE: {vote.Hash}");
                 this.votePool.Add(vote.Hash, vote);
             }
 

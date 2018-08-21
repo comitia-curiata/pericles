@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectionModels", "ElectionM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectionModelTester", "ElectionModelTester\ElectionModelTester.csproj", "{9AE2295E-1F08-4722-89D2-CA819CC76BCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonUtils", "CommonUtils\CommonUtils.csproj", "{52573362-1DE5-4570-8B67-46FDA3A3E936}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{9AE2295E-1F08-4722-89D2-CA819CC76BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AE2295E-1F08-4722-89D2-CA819CC76BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AE2295E-1F08-4722-89D2-CA819CC76BCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52573362-1DE5-4570-8B67-46FDA3A3E936}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52573362-1DE5-4570-8B67-46FDA3A3E936}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52573362-1DE5-4570-8B67-46FDA3A3E936}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52573362-1DE5-4570-8B67-46FDA3A3E936}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

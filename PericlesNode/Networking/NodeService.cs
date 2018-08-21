@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Pericles.Blocks;
+using Pericles.Configuration.Console.Interfaces;
 using Pericles.Hashing;
 using Pericles.Mining;
 using Pericles.Protocol;
@@ -22,6 +23,7 @@ namespace Pericles.Networking
         private readonly VoteValidator voteValidator;
         private readonly BlockValidator blockValidator;
         private readonly BlockchainAdder blockchainAdder;
+        private readonly IConsole console;
 
         public NodeService(
             KnownNodeStore knownNodeStore,
@@ -32,7 +34,8 @@ namespace Pericles.Networking
             Miner miner,
             VoteValidator voteValidator,
             BlockValidator blockValidator,
-            BlockchainAdder blockchainAdder)
+            BlockchainAdder blockchainAdder,
+            IConsole console)
         {
             this.knownNodeStore = knownNodeStore;
             this.nodeClientFactory = nodeClientFactory;
@@ -43,12 +46,13 @@ namespace Pericles.Networking
             this.voteValidator = voteValidator;
             this.blockValidator = blockValidator;
             this.blockchainAdder = blockchainAdder;
+            this.console = console;
         }
 
         public override Task<HandshakeResponse> Handshake(HandshakeRequest request, ServerCallContext context)
         {
             var peerConnectionInfo = new NodeConnectionInfo(request.MyConnectionInfo);
-            Console.WriteLine($"received handshake from: {peerConnectionInfo}");
+            this.console.WriteLine($"received handshake from: {peerConnectionInfo}");
             var response = new HandshakeResponse();
             var knownNodes = this.knownNodeStore.GetAll().Select(x => new ConnectionInfo { IpAddress = x.Ip, Port = x.Port });
             response.KnownNodes.AddRange(knownNodes);
@@ -92,11 +96,11 @@ namespace Pericles.Networking
             var isValidBlock = this.blockValidator.TryGetValidatedBlock(protoBlock, out block);
             if (!isValidBlock)
             {
-                Console.WriteLine("someone tried to trick me! received invalid block.");
+                this.console.WriteLine("someone tried to trick me! received invalid block.");
                 return Task.FromResult(new Empty());
             }
 
-            Console.WriteLine($"RECEIVED BLOCK: {block.Hash}");
+            this.console.WriteLine($"RECEIVED BLOCK: {block.Hash}");
             this.blockchainAdder.AddNewBlock(block);
             this.miner.AbandonCurrentBlock();
 

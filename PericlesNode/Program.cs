@@ -1,6 +1,8 @@
 ﻿using System;
 using Pericles.Blocks;
+using Pericles.CommonUtils;
 using Pericles.Configuration;
+using Pericles.Configuration.Console;
 using Pericles.Crypto;
 using Pericles.Merkle;
 using Pericles.Mining;
@@ -12,8 +14,7 @@ namespace Pericles
 {
     public static class Program
     {
-        private const string Localhost = "localhost";
-        private const int RegistrarPort = 50051;
+        private const int RegistrarPort = 50083;
         private const int MinNetworkSize = 3;
 
         public static void Main(string[] args)
@@ -21,8 +22,12 @@ namespace Pericles
             var configFilepath = args[0];
             var password = args[1];
 
+            // config
             var nodeConfig = ConfigDeserializer.Deserialize<NodeConfig>(configFilepath);
+            var console = ConsoleFactory.Build(nodeConfig.IsMiningNode);
+            var ipAddress = IpAddressProvider.GetLocalIpAddress();
 
+            // password check
             var voterDb = new VoterDatabaseFacade(nodeConfig.VoterDbFilepath);
             var foundMiner = voterDb.TryGetVoterEncryptedKeyPair(password, out var encryptedKeyPair);
             if (!foundMiner)
@@ -31,13 +36,14 @@ namespace Pericles
                 return;
             }
 
+            // blockchain
             var blockchain = new Blockchain();
 
             // networking
             var registrarClientFactory = new RegistrarClientFactory();
-            var registrarClient = registrarClientFactory.Build(Localhost, RegistrarPort);
+            var registrarClient = registrarClientFactory.Build(ipAddress, RegistrarPort);
             var registrationRequestFactory = new RegistrationRequestFactory();
-            var myConnectionInfo = new NodeConnectionInfo(Localhost, nodeConfig.Port);
+            var myConnectionInfo = new NodeConnectionInfo(ipAddress, nodeConfig.Port);
             var knownNodeStore = new KnownNodeStore();
             var nodeClientFactory = new NodeClientFactory();
             var handshakeRequestFactory = new HandshakeRequestFactory(blockchain);
@@ -47,7 +53,7 @@ namespace Pericles
             // votes
             var protoVoteFactory = new ProtoVoteFactory();
             var voteForwarder = new VoteForwarder(nodeClientStore, protoVoteFactory);
-            var voteMemoryPool = new VoteMemoryPool(voteForwarder);
+            var voteMemoryPool = new VoteMemoryPool(voteForwarder, console);
 
             // blocks
             var merkleNodeFactory = new MerkleNodeFactory();
@@ -58,7 +64,7 @@ namespace Pericles
             var blockForwarder = new BlockForwarder(nodeClientStore, protoBlockFactory);
             var voteValidator = new VoteValidator(blockchain, voterDb);
             var blockValidator = new BlockValidator(blockFactory, voteValidator);
-            var blockchainAdder = new BlockchainAdder(blockchain, voteMemoryPool, blockForwarder);
+            var blockchainAdder = new BlockchainAdder(blockchain, voteMemoryPool, blockForwarder, console);
 
             // mining
             var difficultyTarget = TargetFactory.Build(BlockHeader.DefaultBits);
@@ -67,7 +73,8 @@ namespace Pericles
                 voteMemoryPool,
                 difficultyTarget,
                 blockFactory,
-                blockchainAdder);
+                blockchainAdder,
+                console);
 
             // startup
             var nodeServer = nodeServerFactory.Build(
@@ -80,7 +87,8 @@ namespace Pericles
                 miner,
                 voteValidator,
                 blockValidator,
-                blockchainAdder);
+                blockchainAdder,
+                console);
             var boostrapper = new Bootstrapper(
                 MinNetworkSize,
                 knownNodeStore,
@@ -94,15 +102,21 @@ namespace Pericles
             Console.WriteLine("bootstrapping node network...");
             boostrapper.Bootstrap(myConnectionInfo);
             Console.WriteLine($"{MinNetworkSize} nodes in network! bootstrapping complete");
-            
 
-            Console.WriteLine("starting miner...");
-            miner.Start();
+            if (nodeConfig.IsMiningNode)
+            {
+                Console.WriteLine("starting miner...");
+                miner.Start();
 
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("Press any key to quit");
-            Console.ReadKey();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("Press any key to quit");
+                Console.ReadKey();
+            }
+            else
+            {
+                // TODO: start interactive voting console
+            }
         }
     }
 }

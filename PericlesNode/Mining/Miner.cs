@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Threading;
 using Pericles.Blocks;
+using Pericles.Configuration.Console.Interfaces;
 using Pericles.Votes;
 
 namespace Pericles.Mining
@@ -13,6 +14,7 @@ namespace Pericles.Mining
         private readonly BigInteger difficultyTarget;
         private readonly BlockFactory blockFactory;
         private readonly BlockchainAdder blockchainAdder;
+        private readonly IConsole console;
         private readonly object locker;
 
         private Thread thread;
@@ -23,13 +25,15 @@ namespace Pericles.Mining
             VoteMemoryPool voteMemoryPool,
             BigInteger difficultyTarget,
             BlockFactory blockFactory,
-            BlockchainAdder blockchainAdder)
+            BlockchainAdder blockchainAdder,
+            IConsole console)
         {
             this.blockchain = blockchain;
             this.voteMemoryPool = voteMemoryPool;
             this.difficultyTarget = difficultyTarget;
             this.blockFactory = blockFactory;
             this.blockchainAdder = blockchainAdder;
+            this.console = console;
             this.locker = new object();
 
             this.shouldAbandonBlock = false;
@@ -66,8 +70,8 @@ namespace Pericles.Mining
                     continue;
                 }
 
-                Console.WriteLine($"\nMINED NEW BLOCK! Took {numTries} tries, hash = {nextBlock.Hash}");
-                Console.WriteLine($"{nextBlock}");
+                this.console.WriteLine($"\nMINED NEW BLOCK! Took {numTries} tries, hash = {nextBlock.Hash}");
+                this.console.WriteLine($"{nextBlock}");
                 this.blockchainAdder.AddNewBlock(nextBlock);
             }
         }
