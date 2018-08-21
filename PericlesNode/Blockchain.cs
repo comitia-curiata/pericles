@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using Pericles.Blocks;
 using Pericles.Hashing;
 using Pericles.Votes;
@@ -76,6 +77,14 @@ namespace Pericles
                 Block block;
                 this.TryGetBlockByHeight(this.CurrentHeight, out block);
                 return block;
+            }
+        }
+
+        public IEnumerable<Block> GetAllBlocks()
+        {
+            lock (this.locker)
+            {
+                return this.blockStore.Values.Cast<Block>().ToList();
             }
         }
 
