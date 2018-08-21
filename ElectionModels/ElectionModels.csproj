@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElectionAlgorithmFactory.cs" />
     <Compile Include="ElectionType.cs" />
     <Compile Include="FirstPastThePost\FirstPastThePostElectionAlgorithm.cs" />
     <Compile Include="FirstPastThePost\FirstPastThePostVote.cs" />
