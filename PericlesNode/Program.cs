@@ -1,4 +1,5 @@
 ﻿using System;
+using ElectionModels;
 using Pericles.Blocks;
 using Pericles.CommonUtils;
 using Pericles.Configuration;
@@ -75,6 +76,16 @@ namespace Pericles
                 blockFactory,
                 blockchainAdder,
                 console);
+
+            // interaction
+            var voteSerializer = new VoteSerializer();
+            var electionAlgorithmFactory = new ElectionAlgorithmFactory(voteSerializer);
+            var electionAlgorithm = electionAlgorithmFactory.Build(nodeConfig.ElectionType);
+            var electionResultProvider = new ElectionResultProvider(
+                electionAlgorithm,
+                nodeConfig.ElectionEndTime,
+                voteMemoryPool,
+                blockchain);
 
             // startup
             var nodeServer = nodeServerFactory.Build(

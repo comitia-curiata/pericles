@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ElectionModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -13,6 +14,10 @@ namespace Pericles.Configuration
 
         [JsonProperty(PropertyName = "candidates")]
         public List<string> Candidates { get; set; }
+
+        [JsonProperty(PropertyName = "electionEndTime")]
+        [JsonConverter(typeof(CustomDateTimeConverter))]
+        public DateTime ElectionEndTime { get; set; }
 
         [JsonProperty(PropertyName = "voterDbFilepath")]
         public string VoterDbFilepath { get; set; }

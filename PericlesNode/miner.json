@@ -6,6 +6,7 @@
         "Gary Johnson",
         "Jill Stein"
     ],
+    "electionEndTime": "2018-08-23 16:00:00",
     "voterDbFilepath": "../../../VoterDatabase/pericles_voter_db.sqlite",
     "isMiningNode": true,
     "port": 58883

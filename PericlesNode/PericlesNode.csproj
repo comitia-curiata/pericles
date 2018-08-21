@@ -89,6 +89,7 @@
     <Compile Include="Configuration\Console\DoNothingConsole.cs" />
     <Compile Include="Configuration\Console\Interfaces\IConsole.cs" />
     <Compile Include="Configuration\Console\MinerConsole.cs" />
+    <Compile Include="Configuration\CustomDateTimeConverter.cs" />
     <Compile Include="Configuration\NodeConfig.cs" />
     <Compile Include="ElectionResultProvider.cs" />
     <Compile Include="Hashing\Sha256DoubleHasher.cs" />
