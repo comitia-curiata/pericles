@@ -41,7 +41,7 @@ namespace Pericles.VoterTerminal
             return true;
         }
 
-        void ballotPrompt(ElectionType electionType) {
+        public void ballotPrompt(ElectionType electionType) {
             
             if (electionType == ElectionType.FirstPastThePost)
             {
@@ -84,15 +84,17 @@ namespace Pericles.VoterTerminal
                 // We need to consider when a candidate is not wishing NONE
                 int counter = 1;
                 var prefs = "";
+                List<string> tokens = null;
                 char[] charSeparators = new char[] { ',' };
                 while (counter < 4)
                 {
                     Console.WriteLine("Please type a list in order of candidate preference e.g. 2, 1, 3.");
                     prefs= Console.ReadLine();
-                    string[] tokens = prefs.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
-                    if () //TODO validation check of voter input check
+                    tokens = prefs.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                    if (tokens.Count > this.candidateArr.Length)
                     {
-                        Console.WriteLine("Please enter a valid choice.");
+                        Console.WriteLine("Please enter valid choices in the correct format.");
                         counter += 1;
                     }
                     else
@@ -106,7 +108,16 @@ namespace Pericles.VoterTerminal
                     Console.WriteLine("You've exhausted your tries. Bye Bye");
                     return;
                 }
-                InstantRunoffVote iroVote = new InstantRunoffVote(); // make the IR vote
+
+                List<string> rankedOrderedCandidates = new List<string>();
+
+                for (int j=0; j < tokens.Count; j++)
+                {
+                    rankedOrderedCandidates.Add(this.candidateArr[Convert.ToInt32(tokens[j]) - 1]);
+                }
+
+
+                InstantRunoffVote iroVote = new InstantRunoffVote(rankedOrderedCandidates); // make the IR vote
                 var jsonVote = this.voteSerializer.Serialize(iroVote);
                 var signature = SignatureProvider.Sign(this.password, this.keyPair, jsonVote.GetBytes());
                 Vote vote = new Vote(this.keyPair.PublicKey.GetBase64String(), jsonVote, signature.GetBase64String());
