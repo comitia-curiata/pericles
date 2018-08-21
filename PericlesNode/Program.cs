@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using ElectionModels;
 using Pericles.Blocks;
 using Pericles.CommonUtils;
@@ -8,6 +9,7 @@ using Pericles.Crypto;
 using Pericles.Merkle;
 using Pericles.Mining;
 using Pericles.Networking;
+using Pericles.VoterTerminal;
 using Pericles.Votes;
 using VoterDatabase;
 
@@ -23,6 +25,33 @@ namespace Pericles
             var configFilepath = args[0];
             var password = args[1];
 
+            var nodeConfig = ConfigDeserializer.Deserialize<NodeConfig>(configFilepath);
+            var console = ConsoleFactory.Build(nodeConfig.IsMiningNode);
+            var blockchain = new Blockchain();
+            var voterDb = new VoterDatabaseFacade(nodeConfig.VoterDbFilepath);
+            var nodeClientStore = new NodeClientStore();
+            var voteSerializer = new VoteSerializer();
+            var protoVoteFactory = new ProtoVoteFactory();
+            var voteForwarder = new VoteForwarder(nodeClientStore, protoVoteFactory);
+            var voteMemoryPool = new VoteMemoryPool(voteForwarder, console);
+            var electionAlgorithmFactory = new ElectionAlgorithmFactory(voteSerializer);
+            var electionAlgorithm = electionAlgorithmFactory.Build(nodeConfig.ElectionType);
+            var electionResultProvider = new ElectionResultProvider(
+                electionAlgorithm, 
+                nodeConfig.ElectionEndTime, 
+                voteMemoryPool,
+                blockchain);
+            var ballotInterface = new VoterTerminal.VoterTerminal(
+                voterDb,
+                nodeConfig.Candidates.ToArray(),
+                voteSerializer,
+                voteMemoryPool,
+                electionResultProvider);
+
+            ballotInterface.login(password, out var encryptedKeyPair);
+            ballotInterface.ballotPrompt(nodeConfig.ElectionType);
+
+            /*
             // config
             var nodeConfig = ConfigDeserializer.Deserialize<NodeConfig>(configFilepath);
             var console = ConsoleFactory.Build(nodeConfig.IsMiningNode);
@@ -128,6 +157,7 @@ namespace Pericles
             {
                 // TODO: start interactive voting console
             }
+            */
         }
     }
 }

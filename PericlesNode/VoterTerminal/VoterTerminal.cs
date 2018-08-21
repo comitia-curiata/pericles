@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Pericles.Crypto;
 using VoterDatabase;
 using ElectionModels;
@@ -12,23 +10,34 @@ using Pericles.Votes;
 
 namespace Pericles.VoterTerminal
 {
-    class VoterTerminal: IVoterTerminal
+    public class VoterTerminal: IVoterTerminal
     {
-        VoterDatabaseFacade voterDb;
-        string[] candidateArr;
-        EncryptedKeyPair keyPair;
-        IVoteSerializer voteSerializer;
-        string password;
+        private readonly VoterDatabaseFacade voterDb;
+        private readonly string[] candidateArr;
+        private readonly IVoteSerializer voteSerializer;
+        private readonly VoteMemoryPool voteMemoryPool;
+        private readonly ElectionResultProvider electionResultProvider;
 
-        public VoterTerminal(VoterDatabaseFacade voterDb) {
+        private EncryptedKeyPair keyPair;
+        private string password;
+
+        public VoterTerminal(
+            VoterDatabaseFacade voterDb,
+            string[] candidateArr,
+            IVoteSerializer voteSerializer,
+            VoteMemoryPool voteMemoryPool,
+            ElectionResultProvider electionResultProvider)
+        {
             this.voterDb = voterDb;
-            this.candidateArr = new string[] { "Donald Trump", "Arnold Schawarzeneggar", "Oprah Winfrey", "Patrick Yukman"};
-            this.voteSerializer = new VoteSerializer();
+            this.candidateArr = candidateArr;
+            this.voteSerializer = voteSerializer;
+            this.voteMemoryPool = voteMemoryPool;
+            this.electionResultProvider = electionResultProvider;
         }
 
-        public bool login(string password, out EncryptedKeyPair crypticKeyPair)
+        public bool login(string pw, out EncryptedKeyPair crypticKeyPair)
         {
-            Console.WriteLine("Please enter your Voter Regestration Identification Number:\n");
+            Console.WriteLine("Please enter your password:\n");
             string userSuppliedPassword = Console.ReadLine();
             crypticKeyPair = null;
             var success = this.voterDb.TryGetVoterEncryptedKeyPair(userSuppliedPassword, out var encryptedKeyPair);
@@ -75,6 +84,7 @@ namespace Pericles.VoterTerminal
                 var jsonVote = this.voteSerializer.Serialize(irVote);
                 var signature = SignatureProvider.Sign(this.password, this.keyPair, jsonVote.GetBytes());
                 Vote vote = new Vote(this.keyPair.PublicKey.GetBase64String(), jsonVote, signature.GetBase64String());
+                this.voteMemoryPool.AddVote(vote);
             }
             else if (electionType == ElectionType.InstantRunoff)
             {
@@ -122,10 +132,14 @@ namespace Pericles.VoterTerminal
                 var jsonVote = this.voteSerializer.Serialize(iroVote);
                 var signature = SignatureProvider.Sign(this.password, this.keyPair, jsonVote.GetBytes());
                 Vote vote = new Vote(this.keyPair.PublicKey.GetBase64String(), jsonVote, signature.GetBase64String());
+                this.voteMemoryPool.AddVote(vote);
             }
         }
 
-        public string getResult() { return ""; }
+        public string getResult()
+        {
+            return this.electionResultProvider.GetResults();
+        }
 
     }
 }
