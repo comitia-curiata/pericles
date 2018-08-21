@@ -10,7 +10,6 @@ using Pericles.Mining;
 using Pericles.Networking;
 using Pericles.Votes;
 using VoterDatabase;
-using Pericles.VoterTerminal;
 
 namespace Pericles
 {
@@ -38,7 +37,6 @@ namespace Pericles
                 return;
             }
 
-<<<<<<< HEAD
             // blockchain
             var blockchain = new Blockchain();
 
@@ -130,82 +128,6 @@ namespace Pericles
             {
                 // TODO: start interactive voting console
             }
-=======
-            var ballotInterface = new VoterTerminal.VoterTerminal(voterDb);
-
-            //var blockchain = new Blockchain();
-
-            //// networking
-            //var registrarClientFactory = new RegistrarClientFactory();
-            //var registrarClient = registrarClientFactory.Build(Localhost, RegistrarPort);
-            //var registrationRequestFactory = new RegistrationRequestFactory();
-            //var myConnectionInfo = new NodeConnectionInfo(Localhost, port);
-            //var knownNodeStore = new KnownNodeStore();
-            //var nodeClientFactory = new NodeClientFactory();
-            //var handshakeRequestFactory = new HandshakeRequestFactory(blockchain);
-            //var nodeClientStore = new NodeClientStore();
-            //var nodeServerFactory = new NodeServerFactory();
-
-            //// votes
-            //var protoVoteFactory = new ProtoVoteFactory();
-            //var voteForwarder = new VoteForwarder(nodeClientStore, protoVoteFactory);
-            //var voteMemoryPool = new VoteMemoryPool(voteForwarder);
-
-            //// blocks
-            //var merkleNodeFactory = new MerkleNodeFactory();
-            //var merkleTreeFactory = new MerkleTreeFactory(merkleNodeFactory);
-            //var minerId = encryptedKeyPair.PublicKey.GetBase64String();
-            //var blockFactory = new BlockFactory(merkleTreeFactory, minerId);
-            //var protoBlockFactory = new ProtoBlockFactory(protoVoteFactory);
-            //var blockForwarder = new BlockForwarder(nodeClientStore, protoBlockFactory);
-            //var voteValidator = new VoteValidator(blockchain, voterDb);
-            //var blockValidator = new BlockValidator(blockFactory, voteValidator);
-            //var blockchainAdder = new BlockchainAdder(blockchain, voteMemoryPool, blockForwarder);
-
-            //// mining
-            //var difficultyTarget = TargetFactory.Build(BlockHeader.DefaultBits);
-            //var miner = new Miner(
-            //    blockchain,
-            //    voteMemoryPool,
-            //    difficultyTarget,
-            //    blockFactory,
-            //    blockchainAdder);
-
-            //// startup
-            //var nodeServer = nodeServerFactory.Build(
-            //    myConnectionInfo,
-            //    knownNodeStore,
-            //    nodeClientFactory,
-            //    nodeClientStore,
-            //    voteMemoryPool,
-            //    blockchain,
-            //    miner,
-            //    voteValidator,
-            //    blockValidator,
-            //    blockchainAdder);
-            //var boostrapper = new Bootstrapper(
-            //    MinNetworkSize,
-            //    knownNodeStore,
-            //    nodeClientFactory,
-            //    handshakeRequestFactory,
-            //    nodeClientStore,
-            //    registrarClient,
-            //    registrationRequestFactory,
-            //    nodeServer);
-
-            //Console.WriteLine("bootstrapping node network...");
-            //boostrapper.Bootstrap(myConnectionInfo);
-            //Console.WriteLine($"{MinNetworkSize} nodes in network! bootstrapping complete");
-            
-
-            //Console.WriteLine("starting miner...");
-            //miner.Start();
-
-            //Console.WriteLine();
-            //Console.WriteLine();
-            //Console.WriteLine("Press any key to quit");
-            //Console.ReadKey();
->>>>>>> master
         }
     }
 }
