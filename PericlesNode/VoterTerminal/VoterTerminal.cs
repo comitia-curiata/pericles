@@ -35,7 +35,7 @@ namespace Pericles.VoterTerminal
             this.electionResultProvider = electionResultProvider;
         }
 
-        public bool login(string pw, out EncryptedKeyPair crypticKeyPair)
+        public bool login(out EncryptedKeyPair crypticKeyPair)
         {
             Console.WriteLine("Please enter your password:\n");
             string userSuppliedPassword = Console.ReadLine();
@@ -55,7 +55,8 @@ namespace Pericles.VoterTerminal
             if (electionType == ElectionType.FirstPastThePost)
             {
                 var i = 1;
-                Console.WriteLine("Welcome to the election! These are the following candidates to select from:\n" +
+
+                Console.WriteLine("Welcome to the election! This is a 'First Past The Post' election model.\nThese are the following candidates to select from:\n" +
                     string.Join("\n", this.candidateArr.Select(x => $"{i++}: {x}"))
                     );
                 int counter = 1;
@@ -89,7 +90,7 @@ namespace Pericles.VoterTerminal
             else if (electionType == ElectionType.InstantRunoff)
             {
                 var i = 1;
-                Console.WriteLine("Welcome to the election! These are the following candidates to select from:\n" +
+                Console.WriteLine("Welcome to the election! This is a 'Instant Runoff' election model.\nThese are the following candidates to select from:\n" +
                     string.Join("\n", this.candidateArr.Select(x => $"{i++}: {x}"))
                     );
                 // We need to consider when a candidate is not wishing NONE
@@ -99,7 +100,7 @@ namespace Pericles.VoterTerminal
                 char[] charSeparators = new char[] { ',' };
                 while (counter < 4)
                 {
-                    Console.WriteLine("Please type a list in order of candidate preference e.g. 2, 1, 3.");
+                    Console.WriteLine("Please type a list in order of candidate preference e.g. 2,1,3.");
                     prefs= Console.ReadLine();
                     tokens = prefs.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries).ToList();
 
