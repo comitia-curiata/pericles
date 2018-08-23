@@ -16,7 +16,7 @@ namespace Pericles
     public static class Program
     {
         private const int RegistrarPort = 50083;
-        private const int MinNetworkSize = 3;
+        private const int MinNetworkSize = 2;
 
         public static void Main(string[] args)
         {

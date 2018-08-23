@@ -22,7 +22,17 @@ namespace Pericles.VoterTerminal
             while (true)
             {
                 Console.WriteLine("Welcome to the Voting Booth. Please select an option:\n1.Login to vote\n2.Get Results");
-                var choice = Convert.ToInt32(Console.ReadLine());
+                int choice;
+                try
+                {
+                    choice = Convert.ToInt32(Console.ReadLine());
+                }
+                catch
+                {
+                    Console.WriteLine("unrecognized option");
+                    continue;
+                }
+
                 switch (choice)
                 {
                     case 1:

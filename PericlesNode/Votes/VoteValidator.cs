@@ -21,7 +21,7 @@ namespace Pericles.Votes
         public bool IsValid(Vote vote)
         {
             var isPastTimeLimit = DateTime.Now > this.electionEndTime;
-            return isPastTimeLimit && this.IsValidVoter(vote) && this.IsFirstVoteFromVoter(vote) && IsSignatureValid(vote);
+            return !isPastTimeLimit && this.IsValidVoter(vote) && this.IsFirstVoteFromVoter(vote) && IsSignatureValid(vote);
         }
 
         private bool IsValidVoter(Vote vote)
