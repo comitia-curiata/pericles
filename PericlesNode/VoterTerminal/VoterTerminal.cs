@@ -116,32 +116,25 @@ namespace Pericles.VoterTerminal
                         Console.WriteLine("Please enter valid choices in the correct format.");
                         counter += 1;
                     }
-                    else
-                    {
-                        Console.WriteLine("You've exhausted your tries. Bye Bye");
-                        break;
-                    }
-                }
 
-                if (counter == 4)
-                {
-                    Console.WriteLine("You've exhausted your tries. Bye Bye");
+                    List<string> rankedOrderedCandidates = new List<string>();
+
+                    for (int j = 0; j < tokens.Count; j++)
+                    {
+                        rankedOrderedCandidates.Add(this.candidateArr[Convert.ToInt32(tokens[j]) - 1]);
+                    }
+
+
+                    InstantRunoffVote iroVote = new InstantRunoffVote(rankedOrderedCandidates); // make the IR vote
+                    var jsonVote = this.voteSerializer.Serialize(iroVote);
+                    var signature = SignatureProvider.Sign(this.password, this.keyPair, jsonVote.GetBytes());
+                    Vote vote = new Vote(this.keyPair.PublicKey.GetBase64String(), jsonVote, signature.GetBase64String());
+                    this.voteMemoryPool.AddVote(vote);
                     return;
                 }
 
-                List<string> rankedOrderedCandidates = new List<string>();
-
-                for (int j=0; j < tokens.Count; j++)
-                {
-                    rankedOrderedCandidates.Add(this.candidateArr[Convert.ToInt32(tokens[j]) - 1]);
-                }
-
-
-                InstantRunoffVote iroVote = new InstantRunoffVote(rankedOrderedCandidates); // make the IR vote
-                var jsonVote = this.voteSerializer.Serialize(iroVote);
-                var signature = SignatureProvider.Sign(this.password, this.keyPair, jsonVote.GetBytes());
-                Vote vote = new Vote(this.keyPair.PublicKey.GetBase64String(), jsonVote, signature.GetBase64String());
-                this.voteMemoryPool.AddVote(vote);
+                Console.WriteLine("You've exhausted your tries. Bye Bye");
+                return;
             }
         }
 
