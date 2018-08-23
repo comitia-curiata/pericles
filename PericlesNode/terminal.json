@@ -1,4 +1,5 @@
 ﻿{
+    "isClassDemo": true,
     "electionType": "FirstPastThePost",
     "candidates": [
         "Donald Trump",

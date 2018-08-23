@@ -8,6 +8,9 @@ namespace Pericles.Configuration
 {
     public class NodeConfig
     {
+        [JsonProperty(PropertyName = "isClassDemo")]
+        public bool IsClassDemo { get; set; }
+
         [JsonProperty(PropertyName = "electionType")]
         [JsonConverter(typeof(StringEnumConverter))]
         public ElectionType ElectionType { get; set; }

@@ -35,6 +35,11 @@ namespace Pericles.Votes
                 .ToArray();
         }
 
+        public override string ToString()
+        {
+            return $"{this.Hash}";
+        }
+
         private Hash ComputeHash()
         {
             return new Sha256DoubleHasher().DoubleHash(this.GetBytes());
