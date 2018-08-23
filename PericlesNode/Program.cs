@@ -16,7 +16,7 @@ namespace Pericles
     public static class Program
     {
         private const int RegistrarPort = 50083;
-        private const int MinNetworkSize = 2;
+        private const int MinNetworkSize = 4;
 
         public static void Main(string[] args)
         {
@@ -27,6 +27,7 @@ namespace Pericles
             var nodeConfig = ConfigDeserializer.Deserialize<NodeConfig>(configFilepath);
             var console = ConsoleFactory.Build(nodeConfig.IsMiningNode);
             var ipAddress = IpAddressProvider.GetLocalIpAddress();
+            var electionEndTime = nodeConfig.IsClassDemo ? DateTime.Now.AddSeconds(120) : nodeConfig.ElectionEndTime;
 
             // password check
             var voterDb = new VoterDatabaseFacade(nodeConfig.VoterDbFilepath);
@@ -63,7 +64,7 @@ namespace Pericles
             var blockFactory = new BlockFactory(merkleTreeFactory, minerId);
             var protoBlockFactory = new ProtoBlockFactory(protoVoteFactory);
             var blockForwarder = new BlockForwarder(nodeClientStore, protoBlockFactory);
-            var voteValidator = new VoteValidator(blockchain, voterDb, nodeConfig.ElectionEndTime);
+            var voteValidator = new VoteValidator(blockchain, voterDb, electionEndTime);
             var blockValidator = new BlockValidator(blockFactory, voteValidator);
             var blockchainAdder = new BlockchainAdder(blockchain, voteMemoryPool, blockForwarder, console);
 
@@ -81,7 +82,6 @@ namespace Pericles
             var voteSerializer = new VoteSerializer();
             var electionAlgorithmFactory = new ElectionAlgorithmFactory(voteSerializer);
             var electionAlgorithm = electionAlgorithmFactory.Build(nodeConfig.ElectionType);
-            var electionEndTime = nodeConfig.IsClassDemo ? DateTime.Now.AddSeconds(30) : nodeConfig.ElectionEndTime;
             var electionResultProvider = new ElectionResultProvider(
                 electionAlgorithm,
                 electionEndTime,
@@ -92,7 +92,8 @@ namespace Pericles
                 nodeConfig.Candidates.ToArray(),
                 voteSerializer,
                 voteMemoryPool,
-                electionResultProvider);
+                electionResultProvider,
+                blockchain);
             var votingBooth = new VoterTerminal.VoterBooth(voterTerminal, nodeConfig.ElectionType);
 
             // startup

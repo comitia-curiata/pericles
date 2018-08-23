@@ -21,7 +21,7 @@ namespace Pericles.VoterTerminal
         {
             while (true)
             {
-                Console.WriteLine("Welcome to the Voting Booth. Please select an option:\n1.Login to vote\n2.Get Results");
+                Console.WriteLine("Welcome to the Voting Booth. Please select an option:\n1. Login to vote\n2. Get results\n3. Get my vote");
                 int choice;
                 try
                 {
@@ -54,7 +54,7 @@ namespace Pericles.VoterTerminal
                         var isLoginCheck = this.voterTerminal.Login(out var encryptedKeyPairToView);
                         if (isLoginCheck)
                         {
-                            Console.WriteLine(this.voterTerminal.GetMyVote(encryptedKeyPairToView);
+                            Console.WriteLine(this.voterTerminal.GetMyVote(encryptedKeyPairToView));
                         }
                         else
                         {

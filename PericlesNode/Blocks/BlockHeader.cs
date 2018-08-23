@@ -7,7 +7,7 @@ namespace Pericles.Blocks
 {
     public class BlockHeader
     {
-        public const uint DefaultBits = 0x07200000;
+        public const uint DefaultBits = 0x1e200000;
 
         public BlockHeader(Hash prevBlockHash, Hash merkleRootHash)
         {

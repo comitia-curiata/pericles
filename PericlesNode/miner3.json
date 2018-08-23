@@ -1,6 +1,6 @@
 ﻿{
     "isClassDemo": true,
-    "electionType": "InstantRunoff",
+    "electionType": "FirstPastThePost",
     "candidates": [
         "Donald Trump",
         "Hillary Clinton",

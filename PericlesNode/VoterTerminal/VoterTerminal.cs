@@ -17,12 +17,11 @@ namespace Pericles.VoterTerminal
         private readonly IVoteSerializer voteSerializer;
         private readonly VoteMemoryPool voteMemoryPool;
         private readonly ElectionResultProvider electionResultProvider;
+        private readonly Blockchain blockchain;
 
         private EncryptedKeyPair keyPair;
         private string password;
 
-        private readonly Blockchain blockchain;
-        private string voterID;
 
         public VoterTerminal(
             VoterDatabaseFacade voterDb,
@@ -30,16 +29,14 @@ namespace Pericles.VoterTerminal
             IVoteSerializer voteSerializer,
             VoteMemoryPool voteMemoryPool,
             ElectionResultProvider electionResultProvider,
-
-            string voterID)
+            Blockchain blockchain)
         {
             this.voterDb = voterDb;
             this.candidateArr = candidateArr;
             this.voteSerializer = voteSerializer;
             this.voteMemoryPool = voteMemoryPool;
             this.electionResultProvider = electionResultProvider;
-
-            this.voterID = voterID;
+            this.blockchain = blockchain;
         }
 
         public bool Login(out EncryptedKeyPair crypticKeyPair)
@@ -52,6 +49,8 @@ namespace Pericles.VoterTerminal
             {
                 return false;
             }
+
+            crypticKeyPair = encryptedKeyPair;
             this.keyPair = encryptedKeyPair;
             this.password = userSuppliedPassword;
             return true;
@@ -153,7 +152,7 @@ namespace Pericles.VoterTerminal
 
         public string GetMyVote(EncryptedKeyPair crypticKeyPair)
         {
-            blockchain.TryGetVoteByVoter(Convert.ToBase64String(crypticKeyPair.PublicKey), out Vote vote);
+            this.blockchain.TryGetVoteByVoter(Convert.ToBase64String(crypticKeyPair.PublicKey), out Vote vote);
             return vote.Ballot;
         }
 

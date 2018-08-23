@@ -19,6 +19,7 @@ namespace Pericles.CommonUtils
 
             //throw new Exception("No network adapters with an IPv4 address in the system!");
 
+            // for demo
             return "localhost";
         }
     }
