@@ -36,10 +36,10 @@ namespace Pericles.VoterTerminal
                 switch (choice)
                 {
                     case 1:
-                        var isLogin = this.voterTerminal.login(out var encryptedkeyPair);
+                        var isLogin = this.voterTerminal.Login(out var encryptedkeyPair);
                         if (isLogin)
                         {
-                            this.voterTerminal.ballotPrompt(this.electionType);
+                            this.voterTerminal.BallotPrompt(this.electionType);
                         }
 
                         else
@@ -48,7 +48,18 @@ namespace Pericles.VoterTerminal
                         }
                         break;
                     case 2:
-                        Console.WriteLine(this.voterTerminal.getResult());
+                        Console.WriteLine(this.voterTerminal.GetResult());
+                        break;
+                    case 3:
+                        var isLoginCheck = this.voterTerminal.Login(out var encryptedKeyPairToView);
+                        if (isLoginCheck)
+                        {
+                            Console.WriteLine(this.voterTerminal.GetMyVote(encryptedKeyPairToView);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect password. Please login again!");
+                        }
                         break;
                     default:
                         break;

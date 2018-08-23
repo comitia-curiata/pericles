@@ -21,21 +21,28 @@ namespace Pericles.VoterTerminal
         private EncryptedKeyPair keyPair;
         private string password;
 
+        private readonly Blockchain blockchain;
+        private string voterID;
+
         public VoterTerminal(
             VoterDatabaseFacade voterDb,
             string[] candidateArr,
             IVoteSerializer voteSerializer,
             VoteMemoryPool voteMemoryPool,
-            ElectionResultProvider electionResultProvider)
+            ElectionResultProvider electionResultProvider,
+
+            string voterID)
         {
             this.voterDb = voterDb;
             this.candidateArr = candidateArr;
             this.voteSerializer = voteSerializer;
             this.voteMemoryPool = voteMemoryPool;
             this.electionResultProvider = electionResultProvider;
+
+            this.voterID = voterID;
         }
 
-        public bool login(out EncryptedKeyPair crypticKeyPair)
+        public bool Login(out EncryptedKeyPair crypticKeyPair)
         {
             Console.WriteLine("Please enter your password:\n");
             string userSuppliedPassword = Console.ReadLine();
@@ -50,7 +57,7 @@ namespace Pericles.VoterTerminal
             return true;
         }
 
-        public void ballotPrompt(ElectionType electionType) {
+        public void BallotPrompt(ElectionType electionType) {
             
             if (electionType == ElectionType.FirstPastThePost)
             {
@@ -71,6 +78,7 @@ namespace Pericles.VoterTerminal
                     }
                     else
                     {
+                        Console.WriteLine("Thank you for voting!");
                         break;
                     }
                 }
@@ -111,6 +119,7 @@ namespace Pericles.VoterTerminal
                     }
                     else
                     {
+                        Console.WriteLine("You've exhausted your tries. Bye Bye");
                         break;
                     }
                 }
@@ -137,9 +146,15 @@ namespace Pericles.VoterTerminal
             }
         }
 
-        public string getResult()
+        public string GetResult()
         {
             return this.electionResultProvider.GetResults();
+        }
+
+        public string GetMyVote(EncryptedKeyPair crypticKeyPair)
+        {
+            blockchain.TryGetVoteByVoter(Convert.ToBase64String(crypticKeyPair.PublicKey), out Vote vote);
+            return vote.Ballot;
         }
 
     }
