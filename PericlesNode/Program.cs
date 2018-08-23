@@ -81,9 +81,10 @@ namespace Pericles
             var voteSerializer = new VoteSerializer();
             var electionAlgorithmFactory = new ElectionAlgorithmFactory(voteSerializer);
             var electionAlgorithm = electionAlgorithmFactory.Build(nodeConfig.ElectionType);
+            var electionEndTime = nodeConfig.IsClassDemo ? DateTime.Now.AddSeconds(30) : nodeConfig.ElectionEndTime;
             var electionResultProvider = new ElectionResultProvider(
                 electionAlgorithm,
-                nodeConfig.ElectionEndTime,
+                electionEndTime,
                 voteMemoryPool,
                 blockchain);
             var voterTerminal = new VoterTerminal.VoterTerminal(

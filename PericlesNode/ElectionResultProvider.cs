@@ -31,7 +31,10 @@ namespace Pericles
                 return "election is not finished yet!";
             }
 
-            var ballots = this.blockchain.GetAllBlocks().SelectMany(x => x.MerkleTree.Votes.Select(y => y.Ballot)).ToList();
+            var ballots = this.blockchain.GetAllBlocks()
+                .Skip(1)
+                .SelectMany(x => x.MerkleTree.Votes.Select(y => y.Ballot))
+                .ToList();
             return this.electionAlgorithm.GetResults(ballots);
         }
     }
